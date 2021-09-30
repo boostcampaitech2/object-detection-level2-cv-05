@@ -10,3 +10,5 @@ eval/*
 saved/*
 *.csv
 *.swp
+mmdetection/configs/*
+mmdetection/work_dirs/*
