@@ -6,8 +6,10 @@ from mmdet.datasets import (build_dataloader, build_dataset,
                             replace_ImageToTensor)
 
 from pathlib import Path
+from importlib import import_module
 import json
 import os
+import argparse
 
 def increment_path(path):   
     n = 0
@@ -25,74 +27,43 @@ def increment_path(path):
         if not Path(path).exists():
             os.mkdir(path)
 
-    print(path_)
     return path_
 
-classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
-           "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
 
-# config file 들고오기
-cfg = Config.fromfile('/opt/ml/detection/mmdetection/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py')
-#cfg = Config.fromfile('/opt/ml/detection/mmdetection/configs/faster_rcnn/faster_rcnn_r101_fpn_1x_coco.py')
+def main(args):
+    # config file 들고오기
+    root = 'configs'
+    cfg = Config.fromfile(f'{root}/{args.config}')
 
-root='/opt/ml/detection/dataset/'
+    # dataset config 수정
+    cfg.work_dir = increment_path(args.work_dir)
 
-# dataset config 수정
-resize = (1024, 1024)
-cfg.data.train.classes = classes
-cfg.data.train.img_prefix = root
-cfg.data.train.ann_file = root + 'train.json' # train json 정보
-cfg.data.train.pipeline[2]['img_scale'] = resize # Resize
+    # config 저장
+    _base_ = getattr(import_module(f"{root}.{args.config.split('.')[0]}"), '_base_')
+    for base in _base_:
+        os.system(f'cp {root}/{base} {cfg.work_dir}')
 
-'''
-cfg.data.val.classes = classes
-cfg.data.val.img_prefix = root
-cfg.data.val.ann_file = root + '' #valid json 정보
-cfg.data.val.pipeline[1]['img_scale'] = resize
-'''
+    # build_dataset
+    datasets = [build_dataset(cfg.data.train)]
 
-cfg.data.test.classes = classes
-cfg.data.test.img_prefix = root
-cfg.data.test.ann_file = root + 'test.json' # test json 정보
-cfg.data.test.pipeline[1]['img_scale'] = resize # Resize
+    # dataset 확인
+    datasets[0]
 
-cfg.data.samples_per_gpu = 4
+    # 모델 build 및 pretrained network 불러오기
+    model = build_detector(cfg.model)
+    model.init_weights()
 
-cfg.seed = 2021
-cfg.gpu_ids = [0]
-cfg.work_dir = increment_path('./work_dirs/faster_rcnn/exp')
-cfg.model.roi_head.bbox_head.num_classes = 10
-#cfg.model.rpn_head.anchor_generator.ratios = [0.55, 1.0, 1.8]
-#cfg.model.rpn_head.loss_cls = {
-#    "type": "FocalLoss",
-#    "use_sigmoid": True,
-#    "loss_weight":1.0
-#}
-
-cfg.optimizer_config.grad_clip = dict(max_norm=35, norm_type=2)
-cfg.checkpoint_config = dict(max_keep_ckpts=3, interval=1)
-
-cfg.runner.max_epochs = 10
-
-# config 저장
-saved_cfg = dict()
-for key, value in cfg.items():
-    saved_cfg[key] = value
-
-with open(f"{cfg.work_dir}/config.json", "w") as json_file:
-    saved_cfg = json.dumps(saved_cfg, indent=4)
-    json_file.write(saved_cfg)
-
-# build_dataset
-datasets = [build_dataset(cfg.data.train)]
-
-# dataset 확인
-datasets[0]
-
-# 모델 build 및 pretrained network 불러오기
-model = build_detector(cfg.model)
-model.init_weights()
+    # 모델 학습
+    train_detector(model, datasets[0], cfg, distributed=False, validate=True)
 
 
-# 모델 학습
-train_detector(model, datasets[0], cfg, distributed=False, validate=False)
+if __name__ == "__main__":
+    args = argparse.ArgumentParser(description='Config')
+    args.add_argument('-c', '--config', default=None, type=str, help='config file name (default: None)')
+    args.add_argument('-w', '--work_dir', default='work_dirs/exp', type=str, help='work_dir (default: work_dirs/exp)')
+
+    args = args.parse_args()
+    msg_no_cfg = "Configuration file need to be specified. Add '-c faster_rcnn_r50_fpn_1x_coco.py', for example"
+    assert args.config is not None, msg_no_cfg
+
+    main(args)
