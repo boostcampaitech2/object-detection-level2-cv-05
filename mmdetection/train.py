@@ -42,6 +42,24 @@ def main(args):
     _base_ = getattr(import_module(f"{root}.{args.config.split('.')[0]}"), '_base_')
     for base in _base_:
         os.system(f'cp {root}/{base} {cfg.work_dir}')
+    
+    # wandb 연동
+    SAVENAME = cfg.model.type +'_'+ cfg.model.backbone.type +'_'+ cfg.model.neck.type
+    cfg.log_config.hooks.append(
+        dict(type='WandbLoggerHook',
+                init_kwargs = dict(project = "Trash_Detect",
+                                    entity = 'friends',
+                                    name = SAVENAME,
+                                    config = dict(batch_size = cfg.data.samples_per_gpu,
+                                                lr           = cfg.optimizer.lr,
+                                                epochs       = cfg.runner.max_epochs,
+                                                model        = cfg.model.type,
+                                                save_name    = SAVENAME
+                                                 )
+                                  )
+            )
+    )
+
 
     # build_dataset
     datasets = [build_dataset(cfg.data.train)]
