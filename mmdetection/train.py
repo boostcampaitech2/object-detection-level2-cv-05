@@ -7,7 +7,6 @@ from mmdet.datasets import (build_dataloader, build_dataset,
 
 from pathlib import Path
 from importlib import import_module
-import json
 import os
 import argparse
 
