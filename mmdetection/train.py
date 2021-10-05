@@ -53,8 +53,9 @@ def main(args):
                                                 lr           = cfg.optimizer.lr,
                                                 epochs       = cfg.runner.max_epochs,
                                                 model        = cfg.model.type,
-                                                save_name    = SAVENAME
-                                                 )
+                                                save_name    = SAVENAME,
+                                                type         = "TEST" # or "BEST"
+                                                )
                                   )
             )
     )
