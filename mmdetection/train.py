@@ -54,7 +54,7 @@ def main(args):
                                                 epochs       = cfg.runner.max_epochs,
                                                 model        = cfg.model.type,
                                                 save_name    = SAVENAME,
-                                                type         = "TEST" # or "BEST"
+                                                type         = args.wandb_type
                                                 )
                                   )
             )
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser(description='Config')
     args.add_argument('-c', '--config', default=None, type=str, help='config file name (default: None)')
     args.add_argument('-w', '--work_dir', default='work_dirs/exp', type=str, help='work_dir (default: work_dirs/exp)')
-
+    args.add_argument('-t', '--wandb_type', default="TEST", type=str, choices=['TEST','BEST'], help='set wandb type (defailt: TEST)')
     args = args.parse_args()
     msg_no_cfg = "Configuration file need to be specified. Add '-c faster_rcnn_r50_fpn_1x_coco.py', for example"
     assert args.config is not None, msg_no_cfg
