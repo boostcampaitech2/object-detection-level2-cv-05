@@ -4,7 +4,7 @@ import numpy as np
 from pycocotools.coco import COCO
 
 
-def main(submission_files, mode='wbf', weights=None, json_file='test.json', name=None):
+def main(submission_files, iou_thr, mode='wbf', weights=None, json_file='test.json', name=None):
     if mode == 'wbf':
         weights = weights
     else:
@@ -20,7 +20,6 @@ def main(submission_files, mode='wbf', weights=None, json_file='test.json', name
 
     prediction_strings = []
     file_names = []
-    iou_thr = 0.5
 
     for i, image_id in enumerate(image_ids):
         prediction_string = ''
@@ -48,6 +47,8 @@ def main(submission_files, mode='wbf', weights=None, json_file='test.json', name
                 box[1] = float(box[1]) / image_info['height']
                 box[2] = float(box[2]) / image_info['width']
                 box[3] = float(box[3]) / image_info['height']
+                box = [0. if b<0 else b for b in box]
+                box = [1. if b>1 else b for b in box]
                 box_list.append(box)
                 
             boxes_list.append(box_list)
@@ -84,16 +85,41 @@ def main(submission_files, mode='wbf', weights=None, json_file='test.json', name
     
 
 if __name__ == "__main__":
-    json_file = 'split_valid.json'
-    # json_file='test.json'
+    # json_file = 'split_valid.json'
+    json_file='test.json'
+
     # mode = 'nms'
+    # iou_thr = 0.5
     mode = 'wbf'
+    iou_thr = 0.6
+
     submission_files = [
-                        './work_dirs/pseudo_label/swin_transformer/tta/valid_480_ori.csv', 
-                        './work_dirs/pseudo_label/swin_transformer/tta/valid_480_flip.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/cas_swin_large_cloth_battery_LB635.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/swin_large_1024_nms_.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/637_nms.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/pseudo_swin_tiny_fold2_LB595.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/detectors_htc_r101_fold3_525.csv', 
+                        '/opt/ml/detection/mmdetection/for_ensemble/1024_submission_vfnet_all_nms.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/yolox6_all_542.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/nms_csc_swin_all_copypasting.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/swin_fold4_nms.csv'
                         ]
 
+    submission_files = [
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_swin_Large_battery_clothing_635_wbf.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_swin_large_1024_635.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/637_wbf.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/_cascade_swin_large_DIoUloss_LB620.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_pseudo_LB595_wbf06.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_submission_ensemble_detectors.csv', 
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_1024_submission_vfnet_all_wbf.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/yolox6_all_542.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_csc_swin_all_copypasting.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_swin_fold0_wbf06.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_swin_fold1_wbf06.csv',
+                        '/opt/ml/detection/mmdetection/for_ensemble/wbf_swin_fold4_wbf06.csv'
+                        ]
 
+    weights=[2,2,2,2,1,1,1,1,1]
 
-    weights=[1,1]
-    main(submission_files, mode=mode, weights=weights, json_file=json_file, name=None)
+    main(submission_files, iou_thr=iou_thr, mode=mode, weights=weights, json_file=json_file, name='ALL_ENSEMBLE.csv')

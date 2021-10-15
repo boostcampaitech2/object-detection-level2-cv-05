@@ -17,6 +17,7 @@ from pycocotools.coco import COCO
 def main(config, scales, img_norm_cfg, weight, work_dir, samples_per_gpu, json_file='test.json', flip=True):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
             "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
+    class_num = len(classes)
 
     # config file 들고오기
     cfg = Config.fromfile(config)
@@ -82,7 +83,6 @@ def main(config, scales, img_norm_cfg, weight, work_dir, samples_per_gpu, json_f
             file_names = []
             coco = COCO(cfg.data.test.ann_file)
 
-            class_num = 10
             if json_file == 'test.json':
                 for i, out in enumerate(output):
                     prediction_string = ''
@@ -131,13 +131,14 @@ def main(config, scales, img_norm_cfg, weight, work_dir, samples_per_gpu, json_f
 if __name__ == "__main__":
     img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
     scales = [(768, 768), (672, 672), (576, 576), (480, 480)]
+    # scales = [(1024,1024), (928,928), (832,832), (736, 736)]
 
     # json_file = 'split_valid.json'
     json_file = 'test.json'
-    config = './configs/custom_config/swin_transformer_pseudo.py'
-    weight = 'epoch_46'
-    work_dir = './work_dirs/pseudo_label/swin_transformer/'
+    config = './configs/custom_config/cas_swin_L_config/1024-cascade_rcnn_swin_fpn_2x_coco_adam.py'
+    weight = 'best_bbox_mAP_50_epoch_9'
+    work_dir = '/opt/ml/detection/mmdetection/work_dirs/cas_swin_L_config/1024-cascade_rcnn_swin_fpn_2x_coco_adam'
     samples_per_gpu = 32
-    
+ 
 
     main(config, scales, img_norm_cfg, weight, work_dir, samples_per_gpu, json_file=json_file)
