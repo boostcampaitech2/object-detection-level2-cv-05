@@ -33,6 +33,10 @@ pip install -r requirements.txt
 cd mmdetection
 python tools/train.py configs/...
 ```
+```bash
+cd yolov5
+python train.py --cfg ...
+```
 - 사용한 config 목록
 
 | model                                | augment                              | LB score(mAP 50) | config file                   |
@@ -50,10 +54,14 @@ python tools/train.py configs/...
 
 
 ### Inference
-```
+```bash
 cd mmdetection
 python tta_inference.py
 python ensemble.py
+```
+```bash
+cd yolov5
+python detect.py --augment
 ```
 
 
@@ -63,8 +71,10 @@ python ensemble.py
 ├── mmdetection                    # code from mmdetection
 │   ├── tools/train.py             # to train 
 │   ├── tta_inference.py           # test time augmentation inference 
-│   ├── ensemble.py                # ensemble ( weighted nms )
-└── 
+│   └── ensemble.py                # ensemble ( weighted nms )
+└── yolov5						             # code from yolov5
+    ├── train.py             	     # to train 
+    └── detect.py             	   # inference
 ```
 
 
