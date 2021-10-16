@@ -72,9 +72,9 @@ python detect.py --augment
 │   ├── tools/train.py             # to train 
 │   ├── tta_inference.py           # test time augmentation inference 
 │   └── ensemble.py                # ensemble ( weighted nms )
-└── yolov5						             # code from yolov5
-    ├── train.py             	     # to train 
-    └── detect.py             	   # inference
+└── yolov5                         # code from yolov5
+    ├── train.py                   # to train 
+    └── detect.py                  # inference
 ```
 
 
