@@ -17,5 +17,5 @@ resume_from = None
 workflow = [('train', 1)]
 
 gpu_ids = [0]
-seed = 2021
+seed = 830
 
