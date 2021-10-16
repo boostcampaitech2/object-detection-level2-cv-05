@@ -214,11 +214,10 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     if save_txt:  # Write to file
                         # xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         # xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4))).view(-1).tolist()  # xywh
-                        # xywh = xywh[0] - xywh[2]/2 , xywh[1] - xywh[3]/2 , xywh[2] , xywh[3]
                         line = (cls, *xyxy, conf) if save_conf else (cls, *xyxy)  # label format
-    
+        
                         prediction_string += str(int(line[0].item())) + ' ' + str(line[5].item()) + ' ' + str(line[1].item()) + ' ' + str(
-                                                line[2].item()) + ' ' + str(line[3].item()) + ' ' + str(line[4].item()) + ' '
+                                            line[2].item()) + ' ' + str(line[3].item()) + ' ' + str(line[4].item()) + ' '
                         
 
                         with open(txt_path + '.txt', 'a') as f:
@@ -260,7 +259,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     vid_writer[i].write(im0)
         prediction_strings.append(prediction_string)
         file_names.append(file_name)
-    print("TTT : ",len(prediction_strings),len(file_names))
+    
     # save csv
     submission = pd.DataFrame()
     submission['PredictionString'] = prediction_strings
@@ -279,10 +278,10 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'Trash_Detect/yolov5x/weights/best.pt', help='model path(s)')
+    parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'Trash_Detect/yolov5x6_all/weights/best.pt', help='model path(s)')
     parser.add_argument('--source', type=str, default='/opt/ml/detection/dataset/test', help='file/dir/URL/glob, 0 for webcam')
-    parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[1024], help='inference size h,w')
-    parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
+    parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[1280], help='inference size h,w')
+    parser.add_argument('--conf-thres', type=float, default=0.05, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='NMS IoU threshold')
     parser.add_argument('--max-det', type=int, default=100, help='maximum detections per image')
     parser.add_argument('--device', default=0, help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -290,7 +289,7 @@ def parse_opt():
     parser.add_argument('--save-txt', default=True, action='store_true', help='save results to *.txt')
     parser.add_argument('--save-conf', default=True, action='store_true', help='save confidences in --save-txt labels')
     parser.add_argument('--save-crop', action='store_true', help='save cropped prediction boxes')
-    parser.add_argument('--nosave', default=False, action='store_true', help='do not save images/videos')
+    parser.add_argument('--nosave', default=True, action='store_true', help='do not save images/videos')
     parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --classes 0, or --classes 0 2 3')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
     parser.add_argument('--augment', default=True, action='store_true', help='augmented inference')
