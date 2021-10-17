@@ -43,9 +43,9 @@ python train.py --cfg ...
 |--------------------------------------|:------------------------------------:|:----------------:|:-----------------------------:|
 | cascade - swin large                 | multi-scale                          | 0.620            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/cascade_swin/cascade_swin.py)|
 | cascade - swin tiny (pseudo labeling)| multi-scale                          | 0.595            |                               |
-| detectoRS - resnet101                | multi-scale                          |                  |                               |
+| detectoRS - resnet101                | multi-scale                          | 0.525            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/detectors/detectors_htc_r101_rfp.py)|
 | vfnet - swin large                   | multi-scale ,high-resolution, mosaic | 0.540            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/vfnet/vfnet_swin_large_pafpn.py)|
-| yolov5x6 - csp darknet               | multi-scale,autoAugment              | 0,524            |                               |
+| yolov5x6 - csp darknet               | multi-scale,autoAugment              | 0,524            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/yolov5/models/trash_yolov5x6.yaml)|
 
   - ...
   - ...
