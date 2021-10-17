@@ -2630,3 +2630,46 @@ class RandomAffine:
         translation_matrix = np.array([[1, 0., x], [0., 1, y], [0., 0., 1.]],
                                       dtype=np.float32)
         return translation_matrix
+
+
+@PIPELINES.register_module()
+class CopyPasting:
+    def __init__(self):
+        return
+
+
+    def __call__(self, results):
+        # print("call copypasting")
+        """Call function to drop some regions of image."""
+        h, w, c = results['img'].shape
+        gt_bboxes = results['gt_bboxes']
+        copy_bboxes = list()
+        copy_labels = list()
+        for bbox_idx, bbox  in enumerate(gt_bboxes):
+            area = bbox[2] * bbox[3]
+            if area < 96 ** 2:
+                copy_bboxes.append(bbox)
+                copy_labels.append(results['gt_labels'][bbox_idx])
+
+        for bbox_idx, bbox in enumerate(copy_bboxes):
+            xmin, ymin, xmax, ymax = int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3])
+            bw, bh = xmax-xmin, ymax-ymin
+            
+            cx = np.random.randint(results['img_shape'][1])
+            cy = np.random.randint(results['img_shape'][0])
+                        
+            if cx + bw >= results['img_shape'][1]: continue
+            if cy + bh >= results['img_shape'][0]: continue
+            
+            results['img'][cy:cy+bh, cx:cx+bw, :] = results['img'][ymin:ymax, xmin:xmax, :]
+            
+            copy_bbox = np.array([[cx, cy, bw, bh]],dtype=np.float32)
+            copy_label = np.array([copy_labels[bbox_idx]])
+            results['gt_bboxes'] = np.append(results['gt_bboxes'], copy_bbox, axis=0)
+            results['gt_labels'] = np.append(results['gt_labels'], copy_label, axis=0)
+       
+        return results
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        return repr_str
