@@ -42,15 +42,11 @@ python train.py --cfg ...
 | model                                | augment                              | LB score(mAP 50) | config file                   |
 |--------------------------------------|:------------------------------------:|:----------------:|:-----------------------------:|
 | cascade - swin large                 | multi-scale                          | 0.620            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/cascade_swin/cascade_swin.py)|
-| cascade - swin tiny (pseudo labeling)| multi-scale                          | 0.595            |                               |
+| cascade - swin tiny (pseudo labeling)| multi-scale                          | 0.595            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/pseudo_swin_transformer/pseudo_swin_transformer.py)|
 | cascade - swin large                 | multi-scale, copypasting             | 0.561            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/tree/main/configs/cascade_swin_fpn_copypasting/swin_transformer.py)                               |
 | detectoRS - resnet101                | multi-scale                          | 0.525            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/detectors/detectors_htc_r101_rfp.py)|
 | vfnet - swin large                   | multi-scale ,high-resolution, mosaic | 0.540            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/vfnet/vfnet_swin_large_pafpn.py)|
 | yolov5x6 - csp darknet               | multi-scale,autoAugment              | 0,524            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/yolov5/models/trash_yolov5x6.yaml)|
-
-  - ...
-  - ...
-  - ...
 
 
 
@@ -96,10 +92,10 @@ python detect.py --augment
 
 
 ## Contributor
-- 강수빈([github](https://github.com/suuuuuuuubin)) :
-- 김인재([github](https://github.com/K-nowing)) : 
-- 원상혁([github](https://github.com/wonsgong)) :
-- 이경민([github](https://github.com/lkm2835)) :
-- 최민서([github](https://github.com/minseo0214)) :
+- 강수빈([github](https://github.com/suuuuuuuubin)) : 2 Stage model 학습
+- 김인재([github](https://github.com/K-nowing)) : 데이터 분석 및, pseudo labeling 등 다양한 실험 진행
+- 원상혁([github](https://github.com/wonsgong)) : 1 Stage model 학습
+- 이경민([github](https://github.com/lkm2835)) : 2 Stage model, small object detection
+- 최민서([github](https://github.com/minseo0214)) : 데이터 분석 및, 2 Stage model 학습
 
 
