@@ -41,10 +41,10 @@ python train.py --cfg ...
 
 | model                                | augment                              | LB score(mAP 50) | config file                   |
 |--------------------------------------|:------------------------------------:|:----------------:|:-----------------------------:|
-| cascade - swin large                 | multi-scale                          | 0.620            |                               |
+| cascade - swin large                 | multi-scale                          | 0.620            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/cascade_swin/cascade_swin.py)|
 | cascade - swin tiny (pseudo labeling)| multi-scale                          | 0.595            |                               |
 | detectoRS - resnet101                | multi-scale                          |                  |                               |
-| vfnet - swin large                   | multi-scale ,high-resolution, mosaic | 0.540            |                               |
+| vfnet - swin large                   | multi-scale ,high-resolution, mosaic | 0.540            |[config](https://github.com/boostcampaitech2/object-detection-level2-cv-05/blob/main/configs/vfnet/vfnet_swin_large_pafpn.py)|
 | yolov5x6 - csp darknet               | multi-scale,autoAugment              | 0,524            |                               |
 
   - ...
